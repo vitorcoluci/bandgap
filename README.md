@@ -5,7 +5,7 @@ O trabalho foi submetido à Revista Brasileira de Ensino de Física.
 
 O conteúdo deste repositório é:
 
-1) : arquivo para controle do movimento do motor de passo e coleta das medidas e que deve ser carregado na placa Arduino.
+1) LDR-motor.ino: arquivo para controle do movimento do motor de passo e coleta das medidas e que deve ser carregado na placa Arduino.
 
 2) : arquivo em Python que exibe as medidas na tela do computador.
 
