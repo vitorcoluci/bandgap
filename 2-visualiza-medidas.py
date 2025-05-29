@@ -1,7 +1,7 @@
 # -- coding: utf-8 --
 """
 Visualizador de dados do experimento do LDR - Python + Arduino
-Vitor R. Colucivi	
+Vitor R. Coluci	
 baseado no códido de 
 Victor Richard Cardoso/USP/Oficiencia
 e https://www.youtube.com/watch?v=0V-6pu1Gyp8
