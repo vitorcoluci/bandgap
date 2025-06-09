@@ -1,18 +1,16 @@
 # -- coding: utf-8 --
 """
 Visualizador de dados do experimento do LDR - Python + Arduino
-Vitor R. Coluci	
+Autor: Vitor R. Coluci	
 baseado no códido de 
 Victor Richard Cardoso/USP/Oficiencia
 e https://www.youtube.com/watch?v=0V-6pu1Gyp8
-
 https://www.youtube.com/watch?v=zH0MGNJbenc
 
 MODULOS
 
-
 1) CALIBRAR: opcao usada para fazer a calibracao usando o laser vermelho (650nm)
-Nesse modo, a coleta eh feita da direita para a esquerda. Terminada a coleta, o LDR retorna para sua possicao
+Nesse modo, a coleta eh feita da direita para a esquerda. Terminada a coleta, o LDR retorna para sua posicao
 inicial (extrema direita). Os 3 minimos esperados para R sao determinados.
 O grafico apresentado eh R vs Passos com os 3 minimos indicados com circulos.
 
@@ -24,10 +22,10 @@ botao On/OFF nocanto inferior direito do app.
 A coleta eh feita da direita para a esquerda e o LDR retorna a sua posicao original ao final.
 
 3) FUNDO BATCH: essa opcao eh para coleta a luz de fundo, estando o Laser e a luz branca desligadas.
-Varias medidas sao feitas (batch) e o grafico da media dessas medidas com o respectivo desvio padrao (barras de erro) e mostrado.
-O grafico eh R vs passo.
+Varias medidas sao feitas (batch) e o grafico da media dessas medidas com o respectivo desvio padrao (barras de erro) eh mostrado.
+O grafico apresentado eh R vs passo.
 
-4) BATCH:  Essa opcao eh para obter o grafico principal R vs Energia. Ela faz varias medidas (mesmo numero do Fundo Batch)
+4) BATCH (VARIAS MEDIDAS):  Essa opcao eh para obter o grafico principal R vs Energia. Ela faz varias medidas (mesmo numero do Fundo Batch)
 calcula a media e desvio padrao e mostra o grafico com barras de erros.
 
 Para as opcoes 3) e 4), os dados sao verificados para eliminar dados com problemas (Inf ou Nan), usando apenas os
