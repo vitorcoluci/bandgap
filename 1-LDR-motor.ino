@@ -5,7 +5,7 @@
 
 // Pinos conectados ao Step e Dir do Easydriver
 const float Rf = 10000.0; // Resistor ligado ao LDR
-const float V = 5.0;     // Tensão do arduino
+const float V = 5.0;      // Tensão do arduino
 const int n = 10;
 const int num_medidas = 2;
 int pino_passo = 5;
@@ -57,7 +57,7 @@ void loop()
         // tensão no LDR em Volts
         vldr = average*V/1023.0; // transforma valores entre 0 e 1023 para valores entre 0 e 5V
          
-        // resistencia do LDR em ohms obtida a partir da lei de Ohm do circuito mostrado no início do programa
+        // resistencia do LDR em ohms obtida a partir da lei de Ohm
         rldr = vldr*Rf/(V-vldr); 
         
         Serial.print(p); 
@@ -107,7 +107,7 @@ void loop()
         // tensão no LDR em Volts
         vldr = average*V/1023.0; // transforma valores entre 0 e 1023 para valores entre 0 e 5V
          
-        // resistencia do LDR em ohms obtida a partir da lei de Ohm do circuito mostrado no início do programa
+        // resistencia do LDR em ohms obtida a partir da lei de Ohm
         rldr = vldr*Rf/(V-vldr); 
         
         Serial.print(p); 
