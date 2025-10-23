@@ -1,6 +1,6 @@
 # Repositório
 
-Este é o repositório referente ao trabalho "Aparato de baixo custo para medição da energia de \textit{band gap} em fotoresistores" de Vitor R. Coluci, Yuri A. Meyer, Herick H. M. Dos Santos, Talía S. S. Ximenes e Ivan de Oliveira.
+Este é o repositório referente ao trabalho "Aparato de baixo custo para medição da energia de band gap em fotoresistores" de Vitor R. Coluci, Yuri A. Meyer, Herick H. M. Dos Santos, Talía S. S. Ximenes e Ivan de Oliveira.
 O trabalho foi submetido à Revista Brasileira de Ensino de Física.
 
 1) 1-LDR-motor.ino : arquivo para controle do movimento do motor de passo e coleta das medidas e que deve ser carregado na placa Arduino.
