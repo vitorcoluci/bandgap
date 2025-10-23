@@ -1,42 +1,38 @@
 # -- coding: utf-8 --
 """
 Visualizador de dados do experimento do LDR - Python + Arduino
-Autor: Vitor R. Coluci	
+Vitor R. Coluci	
 baseado no códido de 
 Victor Richard Cardoso/USP/Oficiencia
 e https://www.youtube.com/watch?v=0V-6pu1Gyp8
+
 https://www.youtube.com/watch?v=zH0MGNJbenc
 
 MODULOS
 
 1) CALIBRAR: opcao usada para fazer a calibracao usando o laser vermelho (650nm)
-Nesse modo, a coleta eh feita da direita para a esquerda. Terminada a coleta, o LDR retorna para sua posicao
-inicial (extrema direita). Os 3 minimos esperados para R sao determinados.
+Nesse modo, a coleta eh feita da direita para a esquerda. Terminada a coleta, o LDR retorna para sua possicao inicial (extrema direita). Os 3 minimos esperados para R sao determinados.
 O grafico apresentado eh R vs Passos com os 3 minimos indicados com circulos.
 
-2) SINGLE (MEDIDA UNICA): com a calibracao realizada, essa opcao coleta uma unica medida
-para verificar se os dados estao OK para realizar o batch (varias medidas).
+2) SINGLE (MEDIDA UNICA): com a calibracao realizada, essa opcao coleta uma unica medida para verificar se os dados estao OK para realizar o batch (varias medidas).
 Para essa opcao, o Laser deve estar desligado e a luz branca ligada.
 O grafico gerado pode ser R vs passo ou R vs Energia, que pode ser escolhido com o 
-botao On/OFF nocanto inferior direito do app.
+botao On/OFF no canto inferior direito do app.
 A coleta eh feita da direita para a esquerda e o LDR retorna a sua posicao original ao final.
 
 3) FUNDO BATCH: essa opcao eh para coleta a luz de fundo, estando o Laser e a luz branca desligadas.
-Varias medidas sao feitas (batch) e o grafico da media dessas medidas com o respectivo desvio padrao (barras de erro) eh mostrado.
-O grafico apresentado eh R vs passo.
+Varias medidas sao feitas (batch) e o grafico da media dessas medidas com o respectivo desvio padrao (barras de erro) e mostrado.
+O grafico eh R vs passo.
 
-4) BATCH (VARIAS MEDIDAS):  Essa opcao eh para obter o grafico principal R vs Energia. Ela faz varias medidas (mesmo numero do Fundo Batch)
+4) BATCH:  Essa opcao eh para obter o grafico principal R vs Energia. Ela faz varias medidas (mesmo numero do Fundo Batch)
 calcula a media e desvio padrao e mostra o grafico com barras de erros.
 
-Para as opcoes 3) e 4), os dados sao verificados para eliminar dados com problemas (Inf ou Nan), usando apenas os
-dados validos para calcular media e e fazer grafico.
+Para as opcoes 3) e 4), os dados sao verificados para eliminar dados com problemas (Inf ou Nan), usando apenas os dados validos para calcular media e e fazer grafico.
 
 Observacoes:
 a) O numero de medidas para as opcoes 3) e 4) deve ser IGUAL ao numero informado no programa usado no Arduino.
 
-b) Uma vez feita a calibracao, tendo determinado o fator de conversao, esse fator pode ser informado na linha 105.
-Com isso, caso precise reiniciar o programa, nao sera mais necessario realizar a calibracao. Pode-se seguir com 
-a medida unica e batch.
+b) Uma vez feita a calibracao, tendo determinado o fator de conversao, esse fator pode ser informado na linha 100. Com isso, caso precise reiniciar o programa, nao sera mais necessario realizar a calibracao. Pode-se seguir com  a medida unica e batch.
 
 """
 
@@ -58,13 +54,13 @@ import math
 # parametros
 
 # localização da porta serial
-porta_serial='COM5'
+porta_serial='/dev/ttyACM0'
 
 # comprimento de onda (em nm) do laser usado na calibração
-comp_onda = 650.0
+comp_onda = 653.0
 
 #maximo valor de resistencia para gráfico (Ohms)
-max_valor_resistencia = 10000
+max_valor_resistencia = 10000000
 
 grafico_energia = 1 # 1 se quiser imprimir energia no eixo x; 0 se quiser passo no eixo x
 
@@ -72,19 +68,19 @@ grafico_energia = 1 # 1 se quiser imprimir energia no eixo x; 0 se quiser passo 
 n = 5000
 
 # numero total de medidas independentes (batch)
-n_batch = 5   # esse valor precisa ser igual ao que esta no programa do Arduino
+n_batch = 10   # esse valor precisa ser igual ao que esta no programa do Arduino
 
 # imprime na serial a cada passo passos
-passo = 50
+passo = 10
 
 # numero de linhas da matriz media
 n_print = int(n/passo)
 
 # resolução da tela (laptop/PC)
-l=1200
-h=800
-#l=1800
-#h=900
+#l=1200
+#h=800
+l=1800
+h=900
 
 # largura e altura dos botões
 l_b= l/8
@@ -101,7 +97,7 @@ y = []
 id_medida = 0
 id_medida_calib = 0
 
-fator_conversao = 0.39393939
+fator_conversao = 0.368926
 
 is_on = True
 
@@ -147,7 +143,7 @@ def prepara_grafico():
     if (grafico_energia==0):
         plt1.set_xlim(xmin=0,xmax=5000)
     else:
-        plt1.set_xlim(xmin=0,xmax=3.0)
+        plt1.set_xlim(xmin=1.3,xmax=3.0)
     
     # range em y
     plt1.set_ylim(ymin=0,ymax=max_valor_resistencia)
@@ -158,7 +154,7 @@ def prepara_grafico():
 ###########################################################   
 # calibracao com laser para obter fator de conversao de passo para comprimento de onda
 def calibracao():
-    global x,y,n,passo,comp_onda,grafico_energia,fator_conversao,minimos,max_valor_resistencia
+    global x,y,n,passo,comp_onda,grafico_energia,fator_conversao,minimos
     
     x = []
     y = []
@@ -243,9 +239,8 @@ def calibracao():
     print(fator_conversao)
     print(minimos)
 
-    max_valor_resistencia = np.max(yy) + 1000
-    print(np.max(yy))
-
+    #max_valor_resistencia = np.max(yy) + 1000
+    
     # limpa arrays
     np.delete(xx,range(len(xx)))
     np.delete(yy,range(len(yy)))
@@ -282,8 +277,9 @@ def single():
         print(pos_minimo,xminimo) 
         # coloca pico central em passo=0 e converte para nm (fator_conversao vem da calibração)
         for j in range(n_print):
-            data_x[j] = (data_x[j] - xminimo)*fator_conversao
-
+            #data_x[j] = (data_x[j] - xminimo)*fator_conversao
+            data_x[j] = -1.0*(data_x[j] - xminimo)*fator_conversao # -1 eh para usar lado que tem mais intensidade
+            
         # conversao de nm para eV
         for j in range(n_print):
             if (data_x[j] == 0):
@@ -296,7 +292,7 @@ def single():
     y=[]
     x=data_x.tolist()
     y=data_y.tolist()  
-    max_valor_resistencia = np.max(y) + 1000    
+  
     
     # limpa arrays
     np.delete(data_x,range(len(x)))
@@ -427,10 +423,9 @@ def batch():
     global max_valor_resistencia,s,x,y,data_passo_validas,data_passo,data_media,data_sd,n,passo,n_print,n_batch,fator_conversao,grafico_energia
     x = []
     y = []
-    
-    # use mais pontos para o caso do grafico de energia
-    passo_batch = passo/5
-    n_print_batch = n_print*5
+     
+    passo_batch = passo #/5
+    n_print_batch = n_print # *5
 
     data_passo = np.zeros(n_print_batch)
     data_media = np.zeros(n_print_batch)
@@ -479,6 +474,8 @@ def batch():
     data_sd    = np.zeros(n_validas)
     data_medidas_validas = np.zeros((n_validas,n_batch))
 
+    print("Porcentagem medidas validas = ",100.0*n_validas/n_print_batch," %")
+      
     # coleta medidas validas
     k = 0
     for i in range(n_print_batch):
@@ -516,14 +513,13 @@ def batch():
 
     print("Media e desvio padrao -->> calculados !")
     
-    max_valor_resistencia = 5000000
-    #np.max(data_media) + 1000
-    print(np.max(data_media))
+    #max_valor_resistencia = np.max(data_media) + 1000  
     
     if (grafico_energia==1):
         print("preparacao de dados para grafico de Energia")
         data_x = np.zeros(n_validas)   
         data_x = data_passo_validas  
+        data_passo = np.zeros(n_validas) 
         
         minimo = np.min(data_media)
         
@@ -536,16 +532,49 @@ def batch():
         # coloca pico central em passo=0 e converte para nm 
         #(fator_conversao vem da calibração)
         for j in range(n_validas):
-            data_x[j] = (data_x[j] - xminimo)*fator_conversao
+            data_x[j] = -1.0*(data_x[j] - xminimo)*fator_conversao
 
         # conversao de nm para eV
         for j in range(n_validas):
             if (data_x[j] == 0):
-                data_passo_validas[j] = 1242.0/0.001
+                data_passo[j] = 1242.0/0.001
             else:
-                data_passo_validas[j] = 1242.0/data_x[j]
+                data_passo[j] = 1242.0/data_x[j]
         
         np.delete(data_x,range(n_validas))
+        
+        # remove valores de energia fora da regiao de interesse (negativos e maiores que 5 eV)
+        
+        n_interesse = 0
+        for i in range(n_validas):
+        	if (data_passo[i] > 0.0 and data_passo[i] < 5.0):
+        		n_interesse += 1
+               
+        data_passo_interesse = np.zeros(n_interesse)
+        data_media_interesse = np.zeros(n_interesse)
+        data_sd_interesse = np.zeros(n_interesse)
+        
+        k=0
+        for i in range(n_validas):
+            if (data_passo[i] > 0.0 and data_passo[i] < 5.0):
+               data_passo_interesse[k] = data_passo[i]
+               data_media_interesse[k] = data_media[i]
+               data_sd_interesse[k] = data_sd[i]
+               k += 1
+               
+        np.delete(data_passo,range(n_validas))
+        np.delete(data_media,range(n_validas))
+        np.delete(data_sd,range(n_validas)) 
+        
+        data_passo = np.zeros(n_interesse)
+        data_media = np.zeros(n_interesse)
+        data_sd = np.zeros(n_interesse)
+        
+        for i in range(n_interesse):
+               data_passo[i] = data_passo_interesse[i]
+               data_media[i] = data_media_interesse[i]
+               data_sd[i] = data_sd_interesse[i]            
+        
         print("dados preparados !")
     
 ###########################################################    
@@ -587,7 +616,6 @@ def coleta_fundo():
     arr = np.stack((data_passo_validas,data_media,data_sd), axis=1)
     np.savetxt("media-fundo.dat",arr,fmt = ["%1.5f", "%1.5f", "%1.5f"],delimiter = ' ')
     print(" Arquivo media-fundo.dat salvo !")
-    #plt1.errorbar(data_passos,data_media,yerr=data_sd,'-',alpha=0.7,markersize=10)
     
     print(" Preparando grafico ....")
     old = grafico_energia
@@ -603,13 +631,14 @@ def coleta_fundo():
 
 ###########################################################
 def coleta_batch():
-    global max_valor_resistencia,s,data_passo,data_media,data_sd,data_passo_validas
+    global max_valor_resistencia,s,data_passo,data_media,data_sd
     s.write(str.encode("C"))
     
     batch()
     
     print(" Salvando batch em arquivo ...!")
-    arr = np.stack((data_passo_validas,data_media,data_sd), axis=1)
+    print(len(data_passo),len(data_media),len(data_sd))
+    arr = np.stack((data_passo,data_media,data_sd), axis=1)
     np.savetxt("media-batch.dat",arr,fmt = ["%1.5f", "%1.5f", "%1.5f"],delimiter = ' ')
     print(" Arquivo media-batch.dat salvo !")
     
@@ -618,7 +647,7 @@ def coleta_batch():
     print(" Grafico preparado !")
     
     print(" Fazendo o grafico ....")
-    plt1.errorbar(data_passo_validas,data_media,yerr=data_sd,linestyle='-',marker='o',color="white",alpha=0.7,markersize=10)
+    plt1.errorbar(data_passo,data_media,yerr=data_sd,linestyle='-',marker='o',color="white",alpha=0.7,markersize=10)
     canvas.draw()
     print(" Grafico pronto !")
 

@@ -1,6 +1,6 @@
 # Repositório
 
-Este é o repositório referente ao trabalho "Determinação experimental da banda de energia proibida de fotoresistores" de Yuri A. Meyer, Herick H. M. Dos Santos, Guilherme R. Guimarães, Talía S. S. Ximenes e Vitor R. Coluci.
+Este é o repositório referente ao trabalho "Aparato de baixo custo para medição da energia de \textit{band gap} em fotoresistores" de Vitor R. Coluci, Yuri A. Meyer, Herick H. M. Dos Santos, Talía S. S. Ximenes e Ivan de Oliveira.
 O trabalho foi submetido à Revista Brasileira de Ensino de Física.
 
 1) 1-LDR-motor.ino : arquivo para controle do movimento do motor de passo e coleta das medidas e que deve ser carregado na placa Arduino.

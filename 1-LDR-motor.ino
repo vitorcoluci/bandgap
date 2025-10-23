@@ -1,13 +1,11 @@
 // Programa : Controle de motor de passo com Easydriver
-// Autor : Vitor R. Coluci baseando-se em Arduino e Cia
-// 06/02/2025
-
+// Autor : Arduino e Cia
 
 // Pinos conectados ao Step e Dir do Easydriver
 const float Rf = 10000.0; // Resistor ligado ao LDR
-const float V = 5.0;      // Tensão do arduino
-const int n = 10;
-const int num_medidas = 2;
+const float V = 5.0;     // Tensão do arduino
+const int n = 15;
+const int num_medidas = 10;
 int pino_passo = 5;
 int pino_direcao = 4;
 int direcao = 3;
@@ -15,7 +13,7 @@ char d = 0;
 int p,i,q;
 float total,vldr,rldr;
 int data[n];
-int sensorPin = A0;
+int sensorPin = A1;
 float average = 0;
 
 // Quantidade de passos para uma volta completa
@@ -36,7 +34,8 @@ void loop()
   // Define a direcao de rotacao
   if (d=='A')   direcao = 1;
   if (d=='B')   direcao = 0;
-  if (d=='C')   direcao = 2; 
+  if (d=='C')   direcao = 2;
+
   // coleta
   if (direcao==1) 
   {
@@ -48,16 +47,18 @@ void loop()
       for (int i=0 ; i < n; i++)
        {
        data[i] = analogRead(sensorPin); 
+       
        total += data[i];           
        delay(1);
        }
        
+        
         average = total / n;  
 
         // tensão no LDR em Volts
         vldr = average*V/1023.0; // transforma valores entre 0 e 1023 para valores entre 0 e 5V
          
-        // resistencia do LDR em ohms obtida a partir da lei de Ohm
+        // resistencia do LDR em ohms obtida a partir da lei de Ohm do circuito mostrado no início do programa
         rldr = vldr*Rf/(V-vldr); 
         
         Serial.print(p); 
@@ -107,7 +108,7 @@ void loop()
         // tensão no LDR em Volts
         vldr = average*V/1023.0; // transforma valores entre 0 e 1023 para valores entre 0 e 5V
          
-        // resistencia do LDR em ohms obtida a partir da lei de Ohm
+        // resistencia do LDR em ohms obtida a partir da lei de Ohm do circuito mostrado no início do programa
         rldr = vldr*Rf/(V-vldr); 
         
         Serial.print(p); 
